@@ -33,7 +33,15 @@ def fetch_bitfinex_trades(symbol, from_date, to_date):
             
             print(f'fetched {len(trades)} @ {datetime.utcfromtimestamp(current_time/1000.0)}')
             
-            df = pd.concat([df, pd.DataFrame(trades)])
+                        
+            trade_df = pd.DataFrame(trades)
+            trade_df.drop(0, axis=1, inplace=True)
+            trade_df.set_index(1, inplace=True)
+            trade_df[~trade_df.index.isin([current_time])]
+
+
+            df = pd.concat([df, trade_df])
+            
         
             #dont exceed request limits
             time.sleep(0.1)
